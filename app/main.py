@@ -4,8 +4,12 @@ from sqlalchemy.orm import Session
 from typing import List
 from . import models, schemas, crud
 from .database import engine, get_db
+import uvicorn
+import os
 
 models.Base.metadata.create_all(bind=engine)
+
+port = int(os.environ.get("PORT", 8080))
 
 app = FastAPI()
 
@@ -44,3 +48,6 @@ def get_sensor(sensor_type: str, db: Session = Depends(get_db)):
     if not sensor:
         raise HTTPException(status_code=404, detail="Data not found")
     return sensor
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
