@@ -2,10 +2,13 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
-from . import models, schemas, crud
+from app import models, schemas, crud
 from .database import engine, get_db
 import uvicorn
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -39,7 +42,6 @@ def create_sensors_bulk(sensors: List[schemas.SensorCreate], db: Session = Depen
 @app.get("/api/get_all/sensors/", response_model=list[schemas.SensorResponse])
 def get_all_sensors(db: Session = Depends(get_db)):
     result = crud.get_all_sensors(db)
-    result.append({"message": "success"})
     return result
 
 @app.get("/get/sensors/{sensor_type}", response_model=schemas.SensorResponse,)
