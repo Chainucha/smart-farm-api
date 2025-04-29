@@ -2,9 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List
-from . import crud, models, schemas
-from .database import engine, get_db
-import uvicorn
+from app import crud, models, schemas
+from app.database import engine, get_db
 import os
 from dotenv import load_dotenv
 
@@ -13,7 +12,7 @@ load_dotenv()
 models.Base.metadata.create_all(bind=engine)
 
 port = int(os.environ.get("PORT", 8080))
-
+host = os.environ.get("HOST", "127.0.0.1")
 app = FastAPI()
 
 #Optional: Enable CORS
@@ -52,7 +51,3 @@ def get_sensor(sensor_type: str, db: Session = Depends(get_db)):
     if not sensor:
         raise HTTPException(status_code=404, detail="Data not found")
     return sensor
-
-if __name__ == "__main__":
-    
-    uvicorn.run("main:app", host="0.0.0.0", port=port, app_dir="backend")
