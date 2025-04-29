@@ -54,4 +54,4 @@ def get_sensor(sensor_type: str, db: Session = Depends(get_db)):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))  # fallback if PORT is not set
-    gunicorn.run("main:app", host="0.0.0.0", port=port, workers=4, reload=False)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
