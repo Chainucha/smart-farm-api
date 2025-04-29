@@ -16,14 +16,16 @@ port = int(os.environ.get("PORT", 8080))
 
 app = FastAPI()
 
-# Optional: Enable CORS if you need it
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["*"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+#Optional: Enable CORS
+'''
+ app.add_middleware(
+     CORSMiddleware,
+     allow_origins=["*"],
+     allow_credentials=True,
+     allow_methods=["*"],
+     allow_headers=["*"],
+ )
+'''
 
 @app.post("/api/post/sensors/", response_model=schemas.SensorResponse)
 def create_sensor(sensor: schemas.SensorCreate, db: Session = Depends(get_db)):
@@ -35,7 +37,7 @@ def create_sensors_bulk(sensors: List[schemas.SensorCreate], db: Session = Depen
     db_sensors = [models.Sensor(**sensor.model_dump(exclude_unset=True)) for sensor in sensors]
     db.add_all(db_sensors)
     db.commit()
-    return {"message": "✅ Bulk insert successful", 
+    return {"message": "Bulk insert successful", 
             "count": len(db_sensors)
             }
 
@@ -52,4 +54,5 @@ def get_sensor(sensor_type: str, db: Session = Depends(get_db)):
     return sensor
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    
+    uvicorn.run("main:app", host="0.0.0.0", port=port, app_dir="backend")
