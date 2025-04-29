@@ -21,6 +21,7 @@ if DB_SOCKET:
     DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@/{DB_NAME}?unix_socket={DB_SOCKET}"
 else:
     DATABASE_URL = f"mysql+mysqlconnector://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    print(DATABASE_URL)
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

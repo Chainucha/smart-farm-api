@@ -6,7 +6,10 @@ from app import models, schemas, crud
 from app.database import engine, get_db
 import uvicorn
 import os
+import gunicorn
+from dotenv import load_dotenv
 
+load_dotenv()
 models.Base.metadata.create_all(bind=engine)
 
 port = int(os.environ.get("PORT", 8080))
@@ -50,5 +53,5 @@ def get_sensor(sensor_type: str, db: Session = Depends(get_db)):
     return sensor
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))  # fallback if PORT is not set
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
+    port = int(os.environ.get("PORT", 8080))  # fallback if PORT is not set
+    gunicorn.run("main:app", host="0.0.0.0", port=port, workers=4, reload=False)
