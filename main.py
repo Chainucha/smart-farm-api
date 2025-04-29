@@ -25,6 +25,9 @@ app = FastAPI()
      allow_headers=["*"],
  )
 '''
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
 @app.post("/api/post/sensors/", response_model=schemas.SensorResponse)
 def create_sensor(sensor: schemas.SensorCreate, db: Session = Depends(get_db)):
